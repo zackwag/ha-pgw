@@ -37,6 +37,15 @@
       },
       "previous_month_usage": {
         "name": "Previous Month Usage"
+      },
+      "current_bill": {
+        "name": "Current Bill"
+      },
+      "balance_due": {
+        "name": "Balance Due"
+      },
+      "gas_rate": {
+        "name": "Gas Rate"
       }
     }
   }

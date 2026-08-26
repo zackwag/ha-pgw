@@ -6,8 +6,6 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any, override
 
-from pgw_api import GasUsage
-
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
@@ -21,54 +19,50 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
-from .coordinator import PGWConfigEntry, PGWCoordinator
+from .coordinator import PGWConfigEntry, PGWCoordinator, PGWData
 
 
 @dataclass(frozen=True, kw_only=True)
 class PGWSensorEntityDescription(SensorEntityDescription):
     """Description for PGW sensor."""
 
-    value_fn: Callable[[list[GasUsage]], float | None]
-    attributes_fn: Callable[[list[GasUsage]], dict[str, Any]]
+    value_fn: Callable[[PGWData], float | None]
+    attributes_fn: Callable[[PGWData], dict[str, Any]]
 
 
-def _total_usage_ft3(data: list[GasUsage]) -> float | None:
-    """Cumulative total of all usage in ft³ (for energy dashboard)."""
-    if not data:
+def _total_usage(data: PGWData) -> float | None:
+    if not data.usage:
         return None
-    return sum(entry.cf for entry in data)
+    return sum(entry.ccf for entry in data.usage)
 
 
-def _total_usage_attrs(data: list[GasUsage]) -> dict[str, Any]:
-    if not data:
+def _total_usage_attrs(data: PGWData) -> dict[str, Any]:
+    if not data.usage:
         return {}
     return {
-        "months_tracked": len(data),
-        "oldest_month": data[-1].month.strftime("%B %Y"),
-        "newest_month": data[0].month.strftime("%B %Y"),
+        "months_tracked": len(data.usage),
+        "oldest_month": data.usage[-1].month.strftime("%B %Y"),
+        "newest_month": data.usage[0].month.strftime("%B %Y"),
     }
 
 
-def _current_month_ft3(data: list[GasUsage]) -> float | None:
-    if not data:
+def _current_month(data: PGWData) -> float | None:
+    if not data.usage:
         return None
-    return data[0].cf
+    return data.usage[0].ccf
 
 
-def _previous_month_ft3(data: list[GasUsage]) -> float | None:
-    if len(data) < 2:
+def _previous_month(data: PGWData) -> float | None:
+    if len(data.usage) < 2:
         return None
-    return data[1].cf
+    return data.usage[1].ccf
 
 
-def _current_month_attrs(data: list[GasUsage]) -> dict[str, Any]:
-    if not data:
+def _current_month_attrs(data: PGWData) -> dict[str, Any]:
+    if not data.usage:
         return {}
-    entry = data[0]
-    attrs: dict[str, Any] = {
-        "billing_month": entry.month.strftime("%B %Y"),
-        "ccf": entry.ccf,
-    }
+    entry = data.usage[0]
+    attrs: dict[str, Any] = {"billing_month": entry.month.strftime("%B %Y")}
     if entry.period_start:
         attrs["period_start"] = entry.period_start.isoformat()
     if entry.period_end:
@@ -76,48 +70,109 @@ def _current_month_attrs(data: list[GasUsage]) -> dict[str, Any]:
     return attrs
 
 
-def _previous_month_attrs(data: list[GasUsage]) -> dict[str, Any]:
-    if len(data) < 2:
+def _previous_month_attrs(data: PGWData) -> dict[str, Any]:
+    if len(data.usage) < 2:
         return {}
-    entry = data[1]
-    attrs: dict[str, Any] = {
-        "billing_month": entry.month.strftime("%B %Y"),
-        "ccf": entry.ccf,
-    }
+    entry = data.usage[1]
+    attrs: dict[str, Any] = {"billing_month": entry.month.strftime("%B %Y")}
     if entry.period_start:
         attrs["period_start"] = entry.period_start.isoformat()
     if entry.period_end:
         attrs["period_end"] = entry.period_end.isoformat()
     return attrs
+
+
+def _current_bill(data: PGWData) -> float | None:
+    return data.billing.current_bill
+
+
+def _current_bill_attrs(data: PGWData) -> dict[str, Any]:
+    b = data.billing
+    attrs: dict[str, Any] = {
+        "usage_ccf": b.current_usage_ccf,
+        "period_days": b.current_period_days,
+    }
+    if b.period_start:
+        attrs["period_start"] = b.period_start.isoformat()
+    if b.period_end:
+        attrs["period_end"] = b.period_end.isoformat()
+    return attrs
+
+
+def _balance_due(data: PGWData) -> float | None:
+    return data.billing.balance_due
+
+
+def _balance_attrs(data: PGWData) -> dict[str, Any]:
+    b = data.billing
+    return {
+        "previous_bill": b.previous_bill,
+        "previous_year_bill": b.previous_year_bill,
+    }
+
+
+def _gas_rate(data: PGWData) -> float | None:
+    """Effective rate in $/CCF for energy dashboard cost tracking."""
+    return data.billing.current_rate
+
+
+def _gas_rate_attrs(data: PGWData) -> dict[str, Any]:
+    return {}
 
 
 SENSORS: tuple[PGWSensorEntityDescription, ...] = (
     PGWSensorEntityDescription(
         key="total_usage",
         translation_key="total_usage",
-        native_unit_of_measurement=UnitOfVolume.CUBIC_FEET,
+        native_unit_of_measurement=UnitOfVolume.CENTUM_CUBIC_FEET,
         state_class=SensorStateClass.TOTAL_INCREASING,
         device_class=SensorDeviceClass.GAS,
-        value_fn=_total_usage_ft3,
+        value_fn=_total_usage,
         attributes_fn=_total_usage_attrs,
     ),
     PGWSensorEntityDescription(
         key="current_month_usage",
         translation_key="current_month_usage",
-        native_unit_of_measurement=UnitOfVolume.CUBIC_FEET,
+        native_unit_of_measurement=UnitOfVolume.CENTUM_CUBIC_FEET,
         state_class=SensorStateClass.TOTAL,
         device_class=SensorDeviceClass.GAS,
-        value_fn=_current_month_ft3,
+        value_fn=_current_month,
         attributes_fn=_current_month_attrs,
     ),
     PGWSensorEntityDescription(
         key="previous_month_usage",
         translation_key="previous_month_usage",
-        native_unit_of_measurement=UnitOfVolume.CUBIC_FEET,
+        native_unit_of_measurement=UnitOfVolume.CENTUM_CUBIC_FEET,
         state_class=SensorStateClass.TOTAL,
         device_class=SensorDeviceClass.GAS,
-        value_fn=_previous_month_ft3,
+        value_fn=_previous_month,
         attributes_fn=_previous_month_attrs,
+    ),
+    PGWSensorEntityDescription(
+        key="current_bill",
+        translation_key="current_bill",
+        native_unit_of_measurement="$",
+        state_class=SensorStateClass.TOTAL,
+        device_class=SensorDeviceClass.MONETARY,
+        value_fn=_current_bill,
+        attributes_fn=_current_bill_attrs,
+    ),
+    PGWSensorEntityDescription(
+        key="balance_due",
+        translation_key="balance_due",
+        native_unit_of_measurement="$",
+        state_class=SensorStateClass.TOTAL,
+        device_class=SensorDeviceClass.MONETARY,
+        value_fn=_balance_due,
+        attributes_fn=_balance_attrs,
+    ),
+    PGWSensorEntityDescription(
+        key="gas_rate",
+        translation_key="gas_rate",
+        native_unit_of_measurement="$/CCF",
+        state_class=SensorStateClass.MEASUREMENT,
+        value_fn=_gas_rate,
+        attributes_fn=_gas_rate_attrs,
     ),
 )
 
