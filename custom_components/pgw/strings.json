@@ -1,0 +1,43 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "PGW Account",
+        "description": "Enter your Philadelphia Gas Works (PGW) account credentials.",
+        "data": {
+          "username": "Email Address",
+          "password": "Password"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate PGW",
+        "description": "Your PGW credentials are no longer valid. Please re-enter them.",
+        "data": {
+          "username": "Email Address",
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Invalid email or password.",
+      "cannot_connect": "Unable to connect to PGW. Please try again later.",
+      "unknown": "An unexpected error occurred."
+    },
+    "abort": {
+      "already_configured": "This PGW account is already configured."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "total_usage": {
+        "name": "Total Usage"
+      },
+      "current_month_usage": {
+        "name": "Current Month Usage"
+      },
+      "previous_month_usage": {
+        "name": "Previous Month Usage"
+      }
+    }
+  }
+}

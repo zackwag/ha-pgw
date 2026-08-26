@@ -1,0 +1,12 @@
+{
+  "domain": "pgw",
+  "name": "Philadelphia Gas Works (PGW)",
+  "codeowners": ["@zackwag"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/zackwag/ha-pgw",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/zackwag/ha-pgw/issues",
+  "requirements": ["pgw-api==1.0.0"],
+  "version": "1.0.0"
+}
