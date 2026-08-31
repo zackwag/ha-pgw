@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ha-pgw"
-version = "1.0.0"
+version = "1.1.0"
 description = "Home Assistant integration for Philadelphia Gas Works (PGW)"
 readme = "README.md"
 license = {text = "MIT"}
@@ -13,7 +13,7 @@ authors = [
     {name = "zackwag"},
 ]
 dependencies = [
-    "pgw-api==1.0.0",
+    "pgw-api==1.1.0",
 ]
 
 [tool.setuptools.packages.find]

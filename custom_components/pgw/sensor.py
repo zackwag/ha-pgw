@@ -125,7 +125,9 @@ SENSORS: tuple[PGWSensorEntityDescription, ...] = (
         key="total_usage",
         translation_key="total_usage",
         native_unit_of_measurement=UnitOfVolume.CENTUM_CUBIC_FEET,
-        state_class=SensorStateClass.TOTAL_INCREASING,
+        # No state_class: the energy dashboard is fed from imported monthly
+        # statistics (see statistics.py), not from this live sensor. Letting the
+        # recorder also track this sensor would collide with that history.
         device_class=SensorDeviceClass.GAS,
         value_fn=_total_usage,
         attributes_fn=_total_usage_attrs,

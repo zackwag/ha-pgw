@@ -26,7 +26,7 @@ Copy `custom_components/pgw` to your Home Assistant `config/custom_components/` 
 
 | Sensor | Unit | Description |
 |--------|------|-------------|
-| Total Usage | CCF | Cumulative gas consumption (TOTAL_INCREASING) |
+| Total Usage | CCF | Cumulative gas consumption across all billed months |
 | Current Month Usage | CCF | Current billing period usage |
 | Previous Month Usage | CCF | Previous billing period usage |
 | Current Bill | $ | Current month bill amount |
@@ -35,12 +35,30 @@ Copy `custom_components/pgw` to your Home Assistant `config/custom_components/` 
 
 ## Energy Dashboard
 
-This integration is designed for the Home Assistant energy dashboard:
+Because PGW publishes usage only once per monthly bill, this integration does not
+rely on a live sensor for the energy dashboard. Instead it imports your full
+billing history into Home Assistant's long-term statistics, so the dashboard
+shows one bar per billing month for your entire account history and stays current
+as new bills post.
+
+Two statistics are published:
+
+| Statistic | Unit | Description |
+|-----------|------|-------------|
+| `pgw:gas_consumption` (**PGW Gas Consumption**) | CCF | Actual monthly consumption history |
+| `pgw:gas_cost` (**PGW Gas Cost**) | your HA currency | The same history priced at your *current* rate — an estimate for comparing spend across months, not what you were billed |
+
+To configure the dashboard:
 
 1. Go to **Settings → Dashboards → Energy**
 2. Under **Gas consumption**, click **Add gas source**
-3. Select `sensor.pgw_total_usage` (reports in CCF, which the dashboard accepts directly)
-4. For cost tracking, select **Use an entity with current price** and choose `sensor.pgw_gas_rate`
+3. Select **PGW Gas Consumption**
+4. For cost tracking, choose either:
+   - **Use an entity with current price** → `sensor.pgw_gas_meter_gas_rate` (accurate going forward), or
+   - **Use an entity tracking the total costs** → **PGW Gas Cost** (full history, estimated at your current rate)
+
+The history is (re)imported on every poll, so newly posted bills appear within
+6 hours with no further action.
 
 ## Data Updates
 
