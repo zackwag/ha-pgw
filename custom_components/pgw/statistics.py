@@ -23,7 +23,11 @@ from datetime import date, datetime, tzinfo
 from typing import TYPE_CHECKING
 
 from homeassistant.components.recorder import get_instance
-from homeassistant.components.recorder.models import StatisticData, StatisticMetaData
+from homeassistant.components.recorder.models import (
+    StatisticData,
+    StatisticMeanType,
+    StatisticMetaData,
+)
 from homeassistant.components.recorder.statistics import async_add_external_statistics
 from homeassistant.const import UnitOfVolume
 from homeassistant.core import HomeAssistant, callback
@@ -109,7 +113,7 @@ def async_import_history(hass: HomeAssistant, data: PGWData) -> None:
     currency = hass.config.currency or "USD"
 
     consumption_meta = StatisticMetaData(
-        has_mean=False,
+        mean_type=StatisticMeanType.NONE,
         has_sum=True,
         name="PGW Gas Consumption",
         source=DOMAIN,
@@ -117,7 +121,7 @@ def async_import_history(hass: HomeAssistant, data: PGWData) -> None:
         unit_of_measurement=UnitOfVolume.CENTUM_CUBIC_FEET,
     )
     cost_meta = StatisticMetaData(
-        has_mean=False,
+        mean_type=StatisticMeanType.NONE,
         has_sum=True,
         name="PGW Gas Cost (estimated at current rate)",
         source=DOMAIN,
@@ -129,13 +133,11 @@ def async_import_history(hass: HomeAssistant, data: PGWData) -> None:
         hass,
         consumption_meta,
         [StatisticData(start=p.start, state=p.ccf, sum=p.ccf) for p in points],
-        mean_type="none",
     )
     async_add_external_statistics(
         hass,
         cost_meta,
         [StatisticData(start=p.start, state=p.cost, sum=p.cost) for p in points],
-        mean_type="none",
     )
     LOGGER.debug(
         "Imported %d months of PGW statistics (through %s)",
