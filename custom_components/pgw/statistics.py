@@ -129,11 +129,13 @@ def async_import_history(hass: HomeAssistant, data: PGWData) -> None:
         hass,
         consumption_meta,
         [StatisticData(start=p.start, state=p.ccf, sum=p.ccf) for p in points],
+        mean_type="none",
     )
     async_add_external_statistics(
         hass,
         cost_meta,
         [StatisticData(start=p.start, state=p.cost, sum=p.cost) for p in points],
+        mean_type="none",
     )
     LOGGER.debug(
         "Imported %d months of PGW statistics (through %s)",
