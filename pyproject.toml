@@ -13,7 +13,7 @@ authors = [
     {name = "zackwag"},
 ]
 dependencies = [
-    "pgw-api==1.1.0",
+    "pgw-api==1.2.0",
 ]
 
 [project.optional-dependencies]
