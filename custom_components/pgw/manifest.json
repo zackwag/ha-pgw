@@ -8,6 +8,6 @@
   "documentation": "https://github.com/zackwag/ha-pgw",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/zackwag/ha-pgw/issues",
-  "requirements": ["pgw-api==1.1.0"],
-  "version": "1.1.2"
+  "requirements": ["pgw-api==1.2.1"],
+  "version": "1.2.0"
 }
