@@ -6,11 +6,10 @@ from typing import Any
 
 import aiohttp
 import voluptuous as vol
-from pgw_api import PGWApiClient, PGWAuthError, PGWConnectionError
-
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from pgw_api import PGWApiClient, PGWAuthError, PGWConnectionError
 
 from .const import DOMAIN
 
@@ -27,14 +26,10 @@ class PGWConfigFlow(ConfigFlow, domain=DOMAIN):
 
     VERSION = 1
 
-    async def async_step_user(
-        self, user_input: dict[str, Any] | None = None
-    ) -> ConfigFlowResult:
+    async def async_step_user(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         """Handle the initial step."""
         if user_input is None:
-            return self.async_show_form(
-                step_id="user", data_schema=STEP_USER_DATA_SCHEMA
-            )
+            return self.async_show_form(step_id="user", data_schema=STEP_USER_DATA_SCHEMA)
 
         errors: dict[str, str] = {}
 
@@ -72,9 +67,7 @@ class PGWConfigFlow(ConfigFlow, domain=DOMAIN):
             data=user_input,
         )
 
-    async def async_step_reauth(
-        self, entry_data: dict[str, Any]
-    ) -> ConfigFlowResult:
+    async def async_step_reauth(self, entry_data: dict[str, Any]) -> ConfigFlowResult:
         """Handle reauth when credentials expire."""
         return await self.async_step_reauth_confirm()
 
@@ -83,9 +76,7 @@ class PGWConfigFlow(ConfigFlow, domain=DOMAIN):
     ) -> ConfigFlowResult:
         """Handle reauth confirmation."""
         if user_input is None:
-            return self.async_show_form(
-                step_id="reauth_confirm", data_schema=STEP_USER_DATA_SCHEMA
-            )
+            return self.async_show_form(step_id="reauth_confirm", data_schema=STEP_USER_DATA_SCHEMA)
 
         errors: dict[str, str] = {}
 
@@ -118,6 +109,4 @@ class PGWConfigFlow(ConfigFlow, domain=DOMAIN):
             )
 
         reauth_entry = self._get_reauth_entry()
-        return self.async_update_reload_and_abort(
-            reauth_entry, data=user_input
-        )
+        return self.async_update_reload_and_abort(reauth_entry, data=user_input)
