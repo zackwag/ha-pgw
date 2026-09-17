@@ -1,15 +1,14 @@
 """Tests for statistics point building and date helpers."""
 
-from datetime import date, datetime, timezone
+from datetime import date, datetime
 
+from custom_components.pgw.coordinator import PGWData
 from custom_components.pgw.statistics import (
     _build_points,
     _month_start,
     _previous_month_start,
 )
 from tests.conftest import make_billing, make_usage
-
-from custom_components.pgw.coordinator import PGWData
 
 
 class TestMonthStart:
@@ -21,7 +20,7 @@ class TestMonthStart:
         assert result.hour == 0
 
     def test_from_datetime(self):
-        result = _month_start(datetime(2024, 7, 20, 14, 30))
+        result = _month_start(datetime(2024, 7, 20, 14, 30))  # noqa: DTZ001 - only year/month/day are read
         assert result.month == 7
         assert result.day == 1
 

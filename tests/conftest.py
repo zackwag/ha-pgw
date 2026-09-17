@@ -16,9 +16,7 @@ def make_usage(
     period_start: date | None = date(2023, 12, 15),
     period_end: date | None = date(2024, 1, 16),
 ) -> GasUsage:
-    return GasUsage(
-        month=month, ccf=ccf, period_start=period_start, period_end=period_end
-    )
+    return GasUsage(month=month, ccf=ccf, period_start=period_start, period_end=period_end)
 
 
 def make_billing(

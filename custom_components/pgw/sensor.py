@@ -186,9 +186,7 @@ async def async_setup_entry(
 ) -> None:
     """Set up PGW sensors."""
     coordinator = entry.runtime_data
-    async_add_entities(
-        PGWSensor(coordinator, description) for description in SENSORS
-    )
+    async_add_entities(PGWSensor(coordinator, description) for description in SENSORS)
 
 
 class PGWSensor(CoordinatorEntity[PGWCoordinator], SensorEntity):

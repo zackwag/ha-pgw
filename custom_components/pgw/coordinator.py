@@ -6,6 +6,11 @@ from dataclasses import dataclass
 from datetime import timedelta
 
 import aiohttp
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ConfigEntryAuthFailed
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from pgw_api import (
     BillingSummary,
     GasUsage,
@@ -13,12 +18,6 @@ from pgw_api import (
     PGWAuthError,
     PGWConnectionError,
 )
-
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import ConfigEntryAuthFailed
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .const import LOGGER, SCAN_INTERVAL_HOURS
 from .statistics import async_clear_legacy_statistics, async_import_history

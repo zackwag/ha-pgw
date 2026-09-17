@@ -1,7 +1,5 @@
 """Tests for sensor value and attribute extraction functions."""
 
-from datetime import date
-
 from custom_components.pgw.sensor import (
     _balance_attrs,
     _balance_due,
@@ -48,8 +46,8 @@ class TestCurrentMonth:
         assert attrs["period_end"] == "2024-01-16"
 
     def test_attrs_no_period(self):
-        from tests.conftest import make_billing, make_usage
         from custom_components.pgw.coordinator import PGWData
+        from tests.conftest import make_billing, make_usage
 
         data = PGWData(
             usage=[make_usage(period_start=None, period_end=None)],
@@ -101,8 +99,8 @@ class TestBilling:
         assert _gas_rate(sample_data) == 120.50 / 85.0
 
     def test_gas_rate_zero_usage(self):
-        from tests.conftest import make_billing, make_usage
         from custom_components.pgw.coordinator import PGWData
+        from tests.conftest import make_billing, make_usage
 
         data = PGWData(
             usage=[make_usage()],
