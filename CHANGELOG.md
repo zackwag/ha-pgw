@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/zackwag/ha-pgw/compare/v1.3.1...v1.4.0) (2026-09-17)
+
+
+### Features
+
+* **ci:** add ruff lint + format check ([#12](https://github.com/zackwag/ha-pgw/issues/12)) ([b7429e4](https://github.com/zackwag/ha-pgw/commit/b7429e4f97f81159ce7101663496756b78ada0e1))
+
 ## [1.3.1](https://github.com/zackwag/ha-pgw/compare/v1.3.0...v1.3.1) (2026-09-17)
 
 
