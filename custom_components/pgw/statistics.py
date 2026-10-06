@@ -33,6 +33,7 @@ from homeassistant.const import UnitOfVolume
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import entity_registry as er
 from homeassistant.util import dt as dt_util
+from homeassistant.util.unit_conversion import VolumeConverter
 
 from .const import DOMAIN, LOGGER
 
@@ -118,6 +119,7 @@ def async_import_history(hass: HomeAssistant, data: PGWData) -> None:
         name="PGW Gas Consumption",
         source=DOMAIN,
         statistic_id=CONSUMPTION_STATISTIC_ID,
+        unit_class=VolumeConverter.UNIT_CLASS,
         unit_of_measurement=UnitOfVolume.CENTUM_CUBIC_FEET,
     )
     cost_meta = StatisticMetaData(
@@ -126,6 +128,8 @@ def async_import_history(hass: HomeAssistant, data: PGWData) -> None:
         name="PGW Gas Cost (estimated at current rate)",
         source=DOMAIN,
         statistic_id=COST_STATISTIC_ID,
+        # Currency has no unit converter.
+        unit_class=None,
         unit_of_measurement=currency,
     )
 

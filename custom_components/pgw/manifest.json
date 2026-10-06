@@ -13,7 +13,7 @@
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/zackwag/ha-pgw/issues",
   "requirements": [
-    "pgw-api==1.2.1"
+    "pgw-api==1.4.0"
   ],
   "version": "1.4.0"
 }

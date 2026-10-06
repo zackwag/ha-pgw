@@ -1,4 +1,5 @@
 {
   "name": "Philadelphia Gas Works (PGW)",
+  "homeassistant": "2025.11.0",
   "render_readme": true
 }

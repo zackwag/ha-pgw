@@ -1,12 +1,16 @@
 """Tests for statistics point building and date helpers."""
 
 from datetime import date, datetime
+from unittest.mock import MagicMock, patch
 
 from custom_components.pgw.coordinator import PGWData
 from custom_components.pgw.statistics import (
+    CONSUMPTION_STATISTIC_ID,
+    COST_STATISTIC_ID,
     _build_points,
     _month_start,
     _previous_month_start,
+    async_import_history,
 )
 from tests.conftest import make_billing, make_usage
 
@@ -114,3 +118,19 @@ class TestBuildPoints:
         assert points[0].start.month == 5
         assert points[1].start.month == 6
         assert points[1].ccf == 40.0
+
+
+class TestImportHistory:
+    def test_metadata_specifies_unit_class(self, sample_data):
+        hass = MagicMock()
+        hass.config.components = {"recorder"}
+        hass.config.currency = "USD"
+
+        with patch(
+            "custom_components.pgw.statistics.async_add_external_statistics"
+        ) as add_stats:
+            async_import_history(hass, sample_data)
+
+        metas = {call.args[1]["statistic_id"]: call.args[1] for call in add_stats.call_args_list}
+        assert metas[CONSUMPTION_STATISTIC_ID]["unit_class"] == "volume"
+        assert metas[COST_STATISTIC_ID]["unit_class"] is None
