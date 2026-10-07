@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/zackwag/ha-pgw/compare/v1.4.0...v1.4.1) (2026-10-07)
+
+
+### Bug Fixes
+
+* **statistics:** specify unit_class for external statistics ([#18](https://github.com/zackwag/ha-pgw/issues/18)) ([5ea95d1](https://github.com/zackwag/ha-pgw/commit/5ea95d14ece1ef6dbdd28c58143e2fd063b0e1a5))
+
 ## [1.4.0](https://github.com/zackwag/ha-pgw/compare/v1.3.1...v1.4.0) (2026-09-17)
 
 
