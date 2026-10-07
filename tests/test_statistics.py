@@ -126,9 +126,7 @@ class TestImportHistory:
         hass.config.components = {"recorder"}
         hass.config.currency = "USD"
 
-        with patch(
-            "custom_components.pgw.statistics.async_add_external_statistics"
-        ) as add_stats:
+        with patch("custom_components.pgw.statistics.async_add_external_statistics") as add_stats:
             async_import_history(hass, sample_data)
 
         metas = {call.args[1]["statistic_id"]: call.args[1] for call in add_stats.call_args_list}
