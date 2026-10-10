@@ -26,6 +26,9 @@ test = [
 [tool.ruff]
 line-length = 100
 
+[tool.ruff.lint]
+extend-select = ["DTZ"]
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 
