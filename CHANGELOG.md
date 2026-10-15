@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/zackwag/ha-pgw/compare/v1.4.1...v1.4.2) (2026-10-15)
+
+
+### Miscellaneous Chores
+
+* **deps:** bump pgw-api from 1.4.0 to 1.4.1 ([#21](https://github.com/zackwag/ha-pgw/issues/21)) ([db722e6](https://github.com/zackwag/ha-pgw/commit/db722e63a2b43a836e3731dbd8ad06cb49668693))
+
 ## [1.4.1](https://github.com/zackwag/ha-pgw/compare/v1.4.0...v1.4.1) (2026-10-07)
 
 
