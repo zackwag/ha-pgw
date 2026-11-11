@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.3](https://github.com/zackwag/ha-pgw/compare/v1.4.2...v1.4.3) (2026-11-11)
+
+
+### Miscellaneous Chores
+
+* fix dependabot commit-message prefixes for conventional commits ([#23](https://github.com/zackwag/ha-pgw/issues/23)) ([9e61e19](https://github.com/zackwag/ha-pgw/commit/9e61e199cbec7cdb205598761e9622f2204984e9))
+
 ## [1.4.2](https://github.com/zackwag/ha-pgw/compare/v1.4.1...v1.4.2) (2026-10-15)
 
 
